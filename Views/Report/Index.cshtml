@@ -1,0 +1,77 @@
+@model dynamic;
+@{
+
+}
+</br>
+<form asp-action="report_1" asp-controller="Report">
+    <div class="col-12 border p-2" style="background-color: white;">
+        <h2 class="text-info"><i class="fas fa-scroll"></i> การออกรายงาน</h2>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label>หัวข้อรายงาน</label>
+                <select class="form-control form-control-sm" name="topic">
+                    <option value="report1">สรุปจำนวนผู้ใช้บริการ</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>ขอบเขตวันที่</label>
+                <input type="text" name="daterange" id="daterange" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-2">
+                <div class="pt-4">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        แสดงรายงาน
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[name="daterange"]').daterangepicker({
+            linkedCalendars: false,
+            showDropdowns: true,
+            minYear: 2010,
+            ranges: {
+                วันนี้: [moment(), moment()],
+                เมื่อวาน: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+                "7 วันก่อน": [moment().subtract(6, "days"), moment()],
+                "30 วันก่อน": [moment().subtract(29, "days"), moment()],
+                เดือนนี้: [moment().startOf("month"), moment().endOf("month")],
+                เดือนที่เเล้ว: [
+                    moment().subtract(1, "month").startOf("month"),
+                    moment().subtract(1, "month").endOf("month"),
+                ],
+            },
+            locale: {
+                format: "DD/MM/YYYY",
+                separator: " ถึง ",
+                applyLabel: "ตกลง",
+                cancelLabel: "ยกเลิก",
+                fromLabel: "จาก",
+                toLabel: "ถึง",
+                customRangeLabel: "เลือกช่วงเวลาเอง",
+                daysOfWeek: ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"],
+                monthNames: [
+                    "มกราคม",
+                    "กุมภาพันธ์",
+                    "มีนาคม",
+                    "เมษายน",
+                    "พฤษภาคม",
+                    "มิถุนายน",
+                    "กรกฎาคม",
+                    "สิงหาคม",
+                    "กันยายน",
+                    "ตุลาคม",
+                    "พฤศจิกายน",
+                    "ธันวาคม",
+                ],
+                firstDay: 1,
+            },
+        });
+    })
+</script>
+}

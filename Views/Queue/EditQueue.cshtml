@@ -1,0 +1,162 @@
+@model project_2564.Models.Queue
+@{
+    ViewData["Title"] = "EditQueue";
+}
+
+<br>
+<div class="content">
+    <form method="POST" name="EditQ">
+        <div class="container border" style="padding: 30px; background-color: white;">
+            <h1 class="text-center text-info">แก้ไขจองคิว</h1>
+            <div style="padding-top: 60px;">
+                <div class="form-group row">
+                    <input type="hidden" asp-for="create_date" name="create_date" value="@Model.create_date">
+                    <input type='hidden' asp-for="user_id" name="user_id" value="@Model.user_id">
+                    <input type="hidden" asp-for="status" name="status" value="@Model.status">
+                    <input type="hidden" asp-for="wait_time" name="wait_time" value="@Model.wait_time">
+                    <div class="col-md-4">
+                        <h4>ชื่อ</h4>
+                        <input type="text" class="form-control" asp-for="customer_name" name="customer_name">
+                    </div>
+                    <div class="col-md-4">
+                        <h4>เบอร์โทรศัพท์</h4>
+                        <input type="text" class="form-control" asp-for="phone_number" name="phone_number"
+                            data-inputmask="'mask': ['999-999-9999']" data-mask>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>วัน-เวลาที่จอง</h4>
+                        <input type="text" id="book_date" class="form-control" />
+                        <input type="text" id="get_book_date" value="@Model.formatdatetime(@Model.book_date)"
+                            name="book_date" class="form-control" hidden />
+                    </div>
+                </div>
+            </div>
+            <div style="padding-top: 30px;">
+                <h4 class="text-center">ระบุจำนวนคน</h4>
+                <div class="form-group row">
+                    <div class="col"></div>
+                    <input class="btn btn-danger" style="padding: 0px 30px;" type=button value="-" onclick="Minus()">
+                    <div class="col-4">
+                        <input type="text" class="form-control text-center" name="value" asp-for="value"
+                            value="@Model.value" onfocus="buffer=this.value"
+                            onchange="if(isNaN(this.value)) {this.value=buffer}">
+                    </div>
+                    <input class="btn btn-success" style="padding: 0px 30px;" type=button value="+" onclick="Add()">
+                    <div class="col"></div>
+                </div>
+            </div>
+            <div style="padding-top: 30px; text-align: center">
+                <button type="button" class="btn btn-primary " style="padding: 20px 50px;" data-toggle="modal"
+                    data-target="#InputModalCheck">ตกลง</button>
+            </div>
+
+            <div class="modal fade" style="color:black" id="InputModalCheck" tabindex="-1"
+                aria-labelledby="InputModalCheckLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="InputModalCheckLabel">ยืนยันการแก้ไข</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            คุณแน่ใจว่าใส่จำนวนคนถูกต้อง ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด/แก้ไข</button>
+                            <button type="submit" class="btn btn-primary" name="submit">ยืนยัน</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    function Minus() {
+        if (document.EditQ.value.value > 1) {
+            console.log("minusFunction");
+            document.EditQ.value.value--;
+        }
+    }
+
+    function Add() {
+
+        if (document.EditQ.value.value < 10) {
+            console.log("addFunction");
+            document.EditQ.value.value++;
+        }
+    }
+    $(document).ready(function () {
+        convertDate = (hiddenid, date) => {
+            let fulldate = $(`#${date}`).val()
+            console.log(fulldate)
+            let day = fulldate.substring(0, 2)
+            console.log(day)
+            let month = fulldate.substring(3, 5)
+            console.log(month)
+            let year = fulldate.substring(6, 10);
+            console.log(year)
+            let time = fulldate.substring(11, 16);
+            console.log(time)
+            let getdate = month + '/' + day + '/' + year + " " + time
+            console.log(getdate)
+            $(`#${hiddenid}`).val(getdate);
+        }
+
+        ConvertDateTime = (hiddenid, date) => {
+            let get_date_time = $(`#${hiddenid}`).val()
+            $(`#${date}`).val(get_date_time)
+            console.log("Datepicker : " + get_date_time)
+            $(`#${date}`).daterangepicker({
+                timePicker: true,
+                timePicker24Hour: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1901,
+                locale: {
+                    format: "DD/MM/YYYY HH:mm น.",
+                    separator: " ถึง ",
+                    applyLabel: "ตกลง",
+                    cancelLabel: "ยกเลิก",
+                    fromLabel: "จาก",
+                    toLabel: "ถึง",
+                    customRangeLabel: "เลือกช่วงเวลาเอง",
+                    daysOfWeek: ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"],
+                    monthNames: [
+                        "มกราคม",
+                        "กุมภาพันธ์",
+                        "มีนาคม",
+                        "เมษายน",
+                        "พฤษภาคม",
+                        "มิถุนายน",
+                        "กรกฎาคม",
+                        "สิงหาคม",
+                        "กันยายน",
+                        "ตุลาคม",
+                        "พฤศจิกายน",
+                        "ธันวาคม",
+                    ]
+                }
+            })
+            let get_date_time1 = $(`#${date}`).val()
+            $(`#${hiddenid}`).val(get_date_time1)
+            convertDate(`${hiddenid}`, `${date}`)
+            console.log("Date : " + get_date_time1)
+            $(`#${date}`).change(() => { convertDate(`${hiddenid}`, `${date}`) })
+
+            $(`#${date}`).change(() => {
+                let get_date_time2 = $(`#${date}`).val()
+                $(`#${hiddenid}`).val(get_date_time2)
+                console.log("Date2 : " + get_date_time2)
+                convertDate(`${hiddenid}`, `${date}`)
+            })
+        }
+        ConvertDateTime("get_book_date", "book_date")
+    });
+    $('[data-mask]').inputmask()
+</script>
+}

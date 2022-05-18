@@ -1,0 +1,105 @@
+@{
+    ViewData["Title"] = "StoreSetting";
+}
+</br>
+<div class="col-12 border p-2" style="background-color: white;">
+
+    <div class="form-group row pt-3">
+        <div class="col-md-10">
+            <h1 class="text-info"><i class="fas fa-tools"></i> โต๊ะในร้าน</h1>
+        </div>
+        <div class="col-md-2">
+            <a asp-action="AddTable" asp-controller="Storesetting" class="btn btn-success btn-block">
+                <i class="fas fa-plus"></i> เพิ่มโต๊ะ
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="store_tbl" style="width:100%" class="table table-striped table-bordered nowrap dt-responsive 
+            display no-footer dtr-inline collapsed dataTable text-center ">
+            <thead>
+                <tr>
+                    <th scope="col" width="10%">#</th>
+                    <th scope="col" width="60%">หมายเลข</th>
+                    <th scope="col" width="10%">ขนาดที่นั่ง</th>
+                    <th scope="col" width="10%">แก้ไข</th>
+                    <th scope="col" width="10%">ลบ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.id</td>
+                        <td>@item.name</td>
+                        <td>@item.size</td>
+                        <td>
+                            <a asp-action="EditTable" asp-controller="Storesetting" asp-route-id="@item.id"
+                            class="btn btn-warning btn-sm">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a class='btn btn-danger btn-sm text-white' 
+                            onclick=Delete('Delete?id='+@item.id)>
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+</br>
+
+@section Scripts{
+<script type="text/javascript">
+
+    $('#store_tbl').DataTable({
+        "destroy": true,
+        "language": {
+            "lengthMenu": "แสดงข้อมูล _MENU_ แถว ต่อหน้า",
+            "zeroRecords": "ไม่พบข้อมูล!",
+            "info": "กำลังแสดงหน้าที่ _PAGE_ จากทั้งหมด _PAGES_ หน้า",
+            "infoEmpty": "ไม่พบข้อมูล!",
+            "infoFiltered": "(ค้นหาจากข้อมูลทั้งหมด _MAX_ แถว)",
+            "search": "ค้นหา",
+            "emptyTable": "ไม่มีข้อมูล",
+            "paginate": {
+                "previous": "หน้าก่อนหน้า",
+                "next": "หน้าถัดไป"
+            },
+        },
+    }); 
+
+    function Delete(url) {
+        swal({
+            title: "คุณต้องการลบโต๊ะ ?",
+            text: "หากต้องการกู้ข้อมูล ให้แจ้งฝ่ายผู้ดูแลระบบ", 
+            icon: "warning", 
+            buttons: true,
+            dangerMode: true, 
+            buttons: ["ยกเลิก", "ตกลง"],
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            setTimeout(() => { console.log("Delay!"); }, 10000);
+                            location.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    },
+                });
+            }
+        });
+    }
+
+</script>
+}

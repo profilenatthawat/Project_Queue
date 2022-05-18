@@ -1,0 +1,81 @@
+@model project_2564.Models.User
+@{
+  Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in</title>
+
+
+  <link rel="stylesheet" href="~/css/MyStyle.css"/>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="~/FrontEnd/plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/FrontEnd/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/FrontEnd/dist/css/adminlte.min.css">
+
+</head>
+
+<body class="hold-transition login-page Font">
+  <div class="login-box">
+    <div class="login-logo">
+      <h2>ระบบจัดการคิวร้านอาหาร</h2>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+      <div class="card-body login-card-body">
+        <form method="post">
+          @Html.AntiForgeryToken()
+          <div class="input-group mb-3">
+            @Html.TextBoxFor(model => model.username , new { @class = "form-control", placeholder="Username"})
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            @Html.TextBoxFor(model => model.password , new { @class = "form-control", Type="Password",
+            placeholder="Password"})
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="text-danger">@ViewBag.message</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="~/FrontEnd/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/FrontEnd/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/FrontEnd/dist/js/adminlte.min.js"></script>
+</body>
+
+</html>

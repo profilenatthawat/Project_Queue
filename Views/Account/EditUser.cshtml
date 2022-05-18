@@ -1,0 +1,52 @@
+@model project_2564.Models.User
+@{
+    ViewData["Title"] = "EditUser";
+}
+</br>
+<div class="container border" style="padding: 30px; background-color: white;">
+    <form method="POST">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" asp-for="@Model.create_date">
+        <h1 class="text-info">แก้ไขผู้ใช้งาน</h1>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label>สิทธิการใช้งาน</label>
+                <select asp-items="@ViewBag.role" asp-for="role_id" class="form-control form-control-sm">
+                    <option selected disabled>โปรดเลือกสิทธิการใช้งาน</option>
+                </select>
+                <span asp-validation-for="role_id" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col col-md-3">
+                <label>ชื่อผู้ใช้งาน</label>
+                <input type="text" asp-for="username" value="@Model.username" class="form-control">
+                <span asp-validation-for="username" class="text-danger"></span>
+                <span class="text-danger">@ViewBag.message</span>
+            </div>
+            <div class="col col-md-3">
+                <label>รหัสผ่าน</label>
+                <input type="password" asp-for="password" value="@Model.password" class="form-control" readonly>
+            </div>
+            <div class="col-md-2">
+                <label></label>
+                <a asp-action="ChangePass" asp-controller="Account" asp-route-id="@Model.id" class="btn btn-warning btn-block mt-2">
+                    เปลี่ยนรหัสผ่าน
+                </a>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col col-md-3">
+                <button type="submit" class="btn btn-success btn-block">บันทึก</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

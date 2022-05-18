@@ -1,0 +1,30 @@
+@model project_2564.Models.Table
+@{
+    ViewData["Title"] = "Edit Table";
+}
+</br>
+<form method="POST">
+    <input type="hidden" asp-for="@Model.create_date">
+    <div class="container border" style="padding: 30px; background-color: white;">
+        <div class="form-group row pt-3">
+            <h1 class="text-info"><i class="fas fa-hammer"></i> แก้ไขโต๊ะ</h1>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label>ชื่อโต๊ะ</label>
+                <input type="text" class="form-control" asp-for="@Model.name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label>ขนาด</label>
+                <input type="text" class="form-control" asp-for="@Model.size">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-warning btn-block">แก้ไข</button>
+            </div>
+        </div>
+    </div>
+</form>

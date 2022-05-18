@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/FrontEnd/dist/img/rmutl_logo.png" type="image/x-icon">
+    <title>ระบบจัดแถวคอย</title>
+
+    <link rel="stylesheet" href="~/css/MyStyle.css" />
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/FrontEnd/dist/css/adminlte.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/daterangepicker/daterangepicker.css">
+    <!-- Data Table -->
+    <link href="~/lib/DataTables/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/lib/asset/css/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/asset/css/all.css" />
+    <!-- sweetalert JS -->
+    <link rel="stylesheet" href="~/lib/asset/css/sweetalert.min.css" />
+
+    <link rel="stylesheet" href="~/lib/asset/css/toastr.min.css" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed Font">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        @* <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/FrontEnd/dist/img/rmutl_logo.png" alt="AdminLTELogo" height="60"
+            width="60">
+            </div> *@
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a class="nav-link" asp-action="AddAccount" asp-controller="Account">
+                        เพื่มผู้ใช้งาน</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a class="nav-link" asp-action="AddQueue" asp-controller="Queue">
+                        เพิ่มคิว</a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Navbar Search -->
+                @* <li class="nav-item">
+                    <a asp-action="Logout" asp-controller="Account" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                    </li> *@
+            </ul>
+            @* <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-tools"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <span class="dropdown-header">ตั้งค่าระบบ</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> ตั้งค่าระบบเวลารอ
+                </a>
+                <div class="dropdown-divider"></div>
+                <a asp-action="Logout" asp-controller="Account" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+                </div>
+                </li> *@
+            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-header">ตั้งค่าระบบ</span>
+                        <div class="dropdown-divider"></div>
+                        <button href="#" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">
+                            <i class="fa fa-clock"></i> ตั้งค่าการประเมินเวลารอ
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <a asp-action="Logout" asp-controller="Account" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a class="brand-link text-center">
+                <img src="~/FrontEnd/dist/img/tc_logo.jpg" alt="" class="brand-image img-circle elevation-3"
+                    style="opacity: .8">
+                <span class="brand-text font-weight-light">ระบบจัดการคิว</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="~/FrontEnd/dist/img/avatar4.png" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block"> @Context.Session.GetString("username")</a>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-header">เมนู</li>
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                    หน้าแรก
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Queue" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    คิว
+                                </p>
+                            </a>
+                        </li>
+                        @if (User.IsInRole("1") || User.IsInRole("2"))
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Report" asp-action="Index" class="nav-link">
+                                    <i class="nav-icon fas fa-file"></i>
+                                    <p>
+                                        รายงาน
+                                    </p>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("1") || User.IsInRole("2"))
+                        {
+                            <li class="nav-header">ตั้งค่าระบบ</li>
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Role" class="nav-link">
+                                    <i class="nav-icon fas fa-tags"></i>
+                                    <p>
+                                        สิทธิการใช้งาน
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Account" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>
+                                        ผู้ใช้งาน
+                                    </p>
+                                </a>
+                            </li>
+                            @* <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Storesetting" class="nav-link">
+                                <i class="nav-icon fas fa-tools"></i>
+                                <p>
+                                จัดการโต๊ะ
+                                </p>
+                                </a>
+                                </li> *@
+                        }
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Copyright &copy;2021</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 1.0.0
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <form method="post" asp-action="change_cal" asp-controller="Storesetting">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">ตั้งค่าการประเมินเวลารอ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            
+                            <div class="col-5">
+                                <label>คำนวนจากข้อมูลย้อนหลัง</label>
+                            </div>
+                            <div class="col-7">
+                                <select class="form-control form-select text-center" name="calculate_set">
+                                    @for(int i = 1 ; i <= 12 ; i++)
+                                    {   
+                                        <option value="@i">@i เดือน</option>
+                                    }
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-success">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- jQuery -->
+    <script src="~/FrontEnd/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="~/lib/asset/js/jquery-3.2.1.min.js"></script>
+    <script src="~/lib/asset/js/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/FrontEnd/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/FrontEnd/plugins/chart.js/Chart.min.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="~/FrontEnd/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/FrontEnd/plugins/moment/moment.min.js"></script>
+    <script src="~/FrontEnd/plugins/daterangepicker/daterangepicker.js"></script>
+    <!--Datatables-->
+    <script type="text/javascript" src="~/lib/DataTables/datatables.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/FrontEnd/dist/js/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/FrontEnd/dist/js/demo.js"></script>
+    <!-- sweetalert JS -->
+    <script src="~/lib/asset/js/sweetalert.min.js"></script>
+    <script src="~/lib/asset/js/toastr.min.js"></script>
+    <!-- InputMask -->
+    <script src="~/lib/inputmask/jquery.inputmask.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

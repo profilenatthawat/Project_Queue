@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+
+.Font{
+    font-family: 'Kanit', sans-serif;
+  }
+
+@media print {
+  .hidden-print,
+  .hidden-print * {
+    display: none !important;
+  }
+}
+@page {
+  size: auto;
+  margin: 0;
+}
+
+img {
+  max-width: inherit;
+  width: inherit;
+}

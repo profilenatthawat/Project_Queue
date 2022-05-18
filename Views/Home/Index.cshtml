@@ -1,0 +1,641 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+</br>
+
+@* <div class="row">
+    <div class="col-12">
+    <div class="card card-dark">
+    <div class="card-header">
+    <h1 class="card-title">แผนผังโต๊ะ</h1>
+    <div class="card-tools">
+    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+    <i class="fas fa-minus"></i>
+    </button>
+    <button type="button" class="btn btn-tool" data-card-widget="remove">
+    <i class="fas fa-times"></i>
+    </button>
+    </div>
+    </div>
+    <div class="card-body">
+    @foreach(var tbl in Model.tbls)
+    {
+    @if(tbl.status == true)
+    {
+    <a onclick=ChangeTblStatus('ChangeStatusTbl?id='+@tbl.id)
+    class="btn btn-success btn-lg m-2 col-2 shadow rounded">@tbl.name</a>
+    }
+    else
+    {
+    <a onclick=ChangeTblStatus('ChangeStatusTbl?id='+@tbl.id)
+    class="btn btn-danger btn-lg m-2 col-2 shadow rounded">@tbl.name</a>
+    }
+    }
+    </div>
+    </div>
+    </div>
+    </div> *@
+
+<div class="card">
+    <div class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link active" href="#queue_a" id="a" data-toggle="tab">ลำดับคิว 1-2 คน</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#queue_b" id="b" data-toggle="tab">ลำดับคิว 3-4 คน</a></li>
+            <li class="nav-item"><a class="nav-link" href="#queue_c" id="c" data-toggle="tab">ลำดับคิวมากกว่า 4 คน</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="queue_a">
+                <div class="row pt-2">
+                    <div class="col-md-10">
+                        <h2 class="text-info"><i class="nav-icon fas fa-table"></i> ลำดับคิวประเภท 1-2 คน</h2>
+                    </div>
+                </div>
+                </br>
+                <div class="table-responsive">
+                    <table id="DT_load_queue_a" style="width:100%"
+                        class="table table-striped table-bordered nowrap display no-footer dtr-inline collapsed dataTable">
+                        <thead align="center">
+                            <tr>
+                                <th scope="col">ลำดับ</th>
+                                <th scope="col">หมายเลข</th>
+                                <th scope="col">ชื่อ</th>
+                                <th scope="col">เบอร์โทรศัพท์</th>
+                                <th scope="col">เวลาที่จอง</th>
+                                @* <th scope="col">โต๊ะ</th> *@
+                                <th scope="col">เรียก</th>
+                                <th scope="col">สำเร็จ</th>
+                                <th scope="col">พัก</th>
+                                <th scope="col">ยกเลิก</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            @{
+                                int number_a = 1;
+                            }
+                            @foreach (var item in Model.queue_a)
+                            {
+                                <tr>
+                                    @{string formname = "typeA" + number_a.ToString() ; }
+                                    <form id="@formname" method="post" asp-action="CallInLineNotify" asp-controller="Home">
+                                        <td width="5%">
+                                            @number_a
+                                        </td>
+                                        <td width="10%">
+                                            @item.type@item.queue_no
+                                            <input type="hidden" name="Queue_no" value="@item.type@item.id">
+                                        </td>
+                                        <td>
+                                            @item.customer_name
+                                        </td>
+                                        <td width="15%">
+                                            @item.phone_number
+                                            @* <input type="hidden" name="phone_number" value="@item.phone_number"> *@
+                                        </td>
+                                        <td width="5%">
+                                            @item.formattime(@item.book_date) น.
+                                        </td>
+                                        @* <td width="10%">
+                                            <select asp-items="@ViewBag.table_A" class="form-control form-control-sm"
+                                            name="tbl"></select>
+                                            </td> *@
+                                        <td width="5%">
+                                            <a onclick=CallA(@number_a) class="btn btn-info btn-sm">
+                                                <i class="fas fa-volume-up"></i>
+                                            </a>
+                                        </td>
+                                        <td width="5%">
+                                            <a class='btn btn-success btn-sm' onclick=status('Success?id='+@item.id)>
+                                                    <i class="fas fa-check-square"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-warning btn-sm text-white' onclick=status('Stopping?id='+@item.id)>
+                                                    <i class="fas fa-caret-square-down"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-danger btn-sm text-white' onclick=status('Cancel?id='+@item.id)>
+                                                    <i class="fas fa-window-close"></i>
+                                                </a>
+                                            </td>
+                                        </form>
+                                        @{
+                                            number_a++;
+                                        }
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="queue_b">
+                <div class="row pt-2">
+                    <div class="col-md-10">
+                        <h2 class="text-info"><i class="nav-icon fas fa-table"></i> ลำดับคิวประเภท 3-4 คน</h2>
+                    </div>
+                </div>
+                </br>
+                <div class="table-responsive">
+                    <table id="DT_load_queue_b" style="width:100%"
+                        class="table table-striped table-bordered nowrap dt-responsive display no-footer dtr-inline collapsed dataTable">
+                        <thead align="center">
+                            <tr>
+                                <th scope="col">ลำดับ</th>
+                                <th scope="col">หมายเลข</th>
+                                <th scope="col">ชื่อ</th>
+                                <th scope="col">เบอร์โทรศัพท์</th>
+                                <th scope="col">เวลาที่จอง</th>
+                                @* <th scope="col">โต๊ะ</th> *@
+                                <th scope="col">เรียก</th> 
+                                <th scope="col">สำเร็จ</th>
+                                <th scope="col">พัก</th>
+                                <th scope="col">ยกเลิก</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            @{
+                                int number_b = 1;
+                            }
+                            @foreach (var item in Model.queue_b)
+                            {
+                                    <tr>
+                                        @{string formname = "typeB" + number_b.ToString() ; }
+                                        <form id="@formname" method="post" asp-action="CallInLineNotify" asp-controller="Home">
+                                            <td width="5%">@number_b</td>
+                                            <td width="10%"> 
+                                            @item.type@item.queue_no
+                                                <input type="hidden" name="Queue_no" value="@item.type@item.id" >
+                                            </td>
+                                            <td>
+                                            @item.customer_name
+                                            </td>
+                                            <td width="15%">
+                                            @item.phone_number
+                                            </td>
+                                            <td width="5%">
+                                            @item.formattime(@item.book_date) น.
+                                            </td>
+                                        @* <td width="10%">
+                                            <select asp-items="@ViewBag.table_B" class="form-control form-control-sm" name="tbl">     
+                                            </select>
+                                            </td> *@
+                                            <td width="5%">
+                                                <a onclick=CallB(@number_b) class="btn btn-info btn-sm">
+                                                    <i class="fas fa-volume-up"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-success btn-sm' onclick=status('Success?id='+@item.id)>
+                                                    <i class="fas fa-check-square"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-warning btn-sm text-white' onclick=status('Stopping?id='+@item.id)>
+                                                    <i class="fas fa-caret-square-down"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-danger btn-sm text-white' onclick=status('Cancel?id='+@item.id)>
+                                                    <i class="fas fa-window-close"></i>
+                                                </a>
+                                            </td>
+                                        </form>
+                                        @{
+                                            number_b++;
+                                        }
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="queue_c">
+                <div class="row pt-2">
+                    <div class="col-md-10">
+                        <h2 class="text-info"><i class="nav-icon fas fa-table"></i> ลำดับคิวประเภทมากกว่า 4 คน</h2>
+                    </div>
+                </div>
+                </br>
+                <div class="table-responsive">
+                    <table id="DT_load_queue_c" style="width:100%"
+                        class="table table-striped table-bordered nowrap dt-responsive display no-footer dtr-inline collapsed dataTable">
+                        <thead align="center">
+                            <tr>
+                                <th scope="col">ลำดับ</th>
+                                <th scope="col">หมายเลข</th>
+                                <th scope="col">ชื่อ</th>
+                                <th scope="col">เบอร์โทรศัพท์</th>
+                                <th scope="col">เวลาที่จอง</th>
+                                @* <th scope="col">โต๊ะ</th> *@
+                                <th scope="col">เรียก</th> 
+                                <th scope="col">สำเร็จ</th>
+                                <th scope="col">พัก</th>
+                                <th scope="col">ยกเลิก</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            @{
+                                int number_c = 1;
+                            }
+                            @foreach (var item in Model.queue_c)
+                            {
+                                    <tr>
+                                        @{string formname = "typeC" + number_c.ToString() ; }
+                                        <form id="@formname" method="post" asp-action="CallInLineNotify" asp-controller="Home">
+                                            <td width="5%">@number_c</td>
+                                            <td width="10%">
+                                            @item.type@item.queue_no
+                                                <input type="hidden" name="Queue_no" value="@item.type@item.id" >
+                                            </td>
+                                            <td>
+                                            @item.customer_name
+                                            </td>
+                                            <td width="15%">
+                                            @item.phone_number
+                                            </td>
+                                            <td width="5%">
+                                            @item.formattime(@item.book_date) น.
+                                            </td>
+                                        @* <td width="10%">
+                                            <select asp-items="@ViewBag.table_c" class="form-control form-control-sm" name="tbl">     
+                                            </select>
+                                            </td> *@
+                                            <td width="5%">
+                                                <a onclick=CallC(@number_c) class="btn btn-info btn-sm">
+                                                    <i class="fas fa-volume-up"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-success btn-sm' onclick=status('Success?id='+@item.id)>
+                                                    <i class="fas fa-check-square"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-warning btn-sm text-white' onclick=status('Stopping?id='+@item.id)>
+                                                     <i class="fas fa-caret-square-down"></i>
+                                                </a>
+                                            </td>
+                                            <td width="5%">
+                                                <a class=' btn btn-danger btn-sm text-white' onclick=status('Cancel?id='+@item.id)>
+                                                    <i class="fas fa-window-close"></i>
+                                                </a>
+                                            </td>
+                                        </form>
+                                        @{
+                                            number_c++;
+                                        }
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row pt-2">
+            <div class="col-md-10">
+                <h2 class="text-info"><i class="nav-icon fas fa-table"></i> ลำดับคิวที่พัก </h2>
+            </div>
+        </div>
+        </br>
+        <table id="DT_load_queue_stop" style="width:100%"
+            class="table table-striped table-bordered nowrap dt-responsive display no-footer dtr-inline collapsed dataTable">
+            <thead align="center">
+                <tr>
+                    <th scope="col">ลำดับ</th>
+                    <th scope="col">หมายเลข</th>
+                    <th scope="col">ชื่อ</th>
+                    <th scope="col">เบอร์โทรศัพท์</th>
+                    <th scope="col">เวลาที่จอง</th>
+                    <th scope="col">เรียกกลับ</th>
+                </tr>
+            </thead>
+            <tbody align="center">
+                @{
+                    int number_stop = 1;
+                }
+                @foreach (var item in Model.queue_stop)
+                {
+                        <tr>
+                            <td width="5%">@number_stop</td>
+                        @{
+                            number_stop++;
+                        }
+                            <td>
+                            @item.type@item.id
+                                <input type="hidden" name="Queue_no" value="@item.type@item.id" >
+                            </td>
+                            <td>
+                            @item.customer_name
+                            </td>
+                            <td>
+                            @item.phone_number
+                            </td>
+                            <td>
+                            @item.formattime(@item.book_date) น.
+                            </td>
+                            <td width="5%">
+                                <a class=' btn btn-success btn-sm text-white' onclick=status('Waiting?id='+@item.id)>
+                                   <i class="fas fa-undo-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+</br>
+<div class="row">
+    <div class="col-6">
+        <div class="card card-dark">
+            <div class="card-header">
+                <h3 class="card-title">สรุปจำนวนผู้เข้ารับบริการวันนี้</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="myChart_1"
+                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <input type="hidden" id="Type_A_Today" name="Type_A_Today" value="@Model.Type_A_Today">
+                <input type="hidden" id="Type_B_Today" name="Type_B_Today" value="@Model.Type_B_Today">
+                <input type="hidden" id="Type_C_Today" name="Type_C_Today" value="@Model.Type_C_Today">
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+
+    <div class="col-6">
+        <!-- BAR CHART -->
+        <div class="card card-dark">
+            <div class="card-header">
+                <h3 class="card-title">สรุปช่วงเวลาในการเข้ารับบริการวันนี้</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <canvas id="myChart_2"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <input type="hidden" id="Value_8am" name="Value_8am" value="@Model.Value_8am">
+                    <input type="hidden" id="Value_9am" name="Value_9am" value="@Model.Value_9am">
+                    <input type="hidden" id="Value_10am" name="Value_10am" value="@Model.Value_10am">
+                    <input type="hidden" id="Value_11am" name="Value_11am" value="@Model.Value_11am">
+                    <input type="hidden" id="Value_12am" name="Value_12am" value="@Model.Value_12am">
+                    <input type="hidden" id="Value_13am" name="Value_13am" value="@Model.Value_13am">
+                    <input type="hidden" id="Value_14am" name="Value_14am" value="@Model.Value_14am">
+                    <input type="hidden" id="Value_15am" name="Value_15am" value="@Model.Value_15am">
+                    <input type="hidden" id="Value_16am" name="Value_16am" value="@Model.Value_16am">
+                    <input type="hidden" id="Value_17am" name="Value_17am" value="@Model.Value_17am">
+                    <input type="hidden" id="Value_18am" name="Value_18am" value="@Model.Value_18am">
+                    <input type="hidden" id="Value_19am" name="Value_19am" value="@Model.Value_19am">
+                    <input type="hidden" id="Value_20am" name="Value_20am" value="@Model.Value_20am">
+                    <input type="hidden" id="Value_21am" name="Value_21am" value="@Model.Value_21am">
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(' #DT_load_queue_a').DataTable({
+            "destroy": true,
+            "ordering": false,
+            "language": {
+                "lengthMenu"
+                    : "แสดงข้อมูล _MENU_ แถว ต่อหน้า", "zeroRecords": "ไม่พบข้อมูล!", "info"
+                    : "กำลังแสดงหน้าที่ _PAGE_ จากทั้งหมด _PAGES_ หน้า", "infoEmpty"
+                    : "ไม่พบข้อมูล!", "infoFiltered": "(ค้นหาจากข้อมูลทั้งหมด _MAX_ แถว)"
+                , "search": "ค้นหา", "emptyTable": "ไม่มีข้อมูล", "paginate":
+                    { "previous": "หน้าก่อนหน้า", "next": "หน้าถัดไป" },
+            },
+        });
+
+        $('#DT_load_queue_b').DataTable({
+            "destroy": true,
+            "ordering": false,
+            "language": {
+                "lengthMenu"
+                    : "แสดงข้อมูล _MENU_ แถว ต่อหน้า", "zeroRecords": "ไม่พบข้อมูล!", "info"
+                    : "กำลังแสดงหน้าที่ _PAGE_ จากทั้งหมด _PAGES_ หน้า", "infoEmpty"
+                    : "ไม่พบข้อมูล!", "infoFiltered": "(ค้นหาจากข้อมูลทั้งหมด _MAX_ แถว)"
+                , "search": "ค้นหา", "emptyTable": "ไม่มีข้อมูล", "paginate":
+                    { "previous": "หน้าก่อนหน้า", "next": "หน้าถัดไป" },
+            },
+        });
+
+        $('#DT_load_queue_c').DataTable({
+            "destroy": true,
+            "ordering": false,
+            "language": {
+                "lengthMenu"
+                    : "แสดงข้อมูล _MENU_ แถว ต่อหน้า", "zeroRecords": "ไม่พบข้อมูล!", "info"
+                    : "กำลังแสดงหน้าที่ _PAGE_ จากทั้งหมด _PAGES_ หน้า", "infoEmpty"
+                    : "ไม่พบข้อมูล!", "infoFiltered": "(ค้นหาจากข้อมูลทั้งหมด _MAX_ แถว)"
+                , "search": "ค้นหา", "emptyTable": "ไม่มีข้อมูล", "paginate":
+                    { "previous": "หน้าก่อนหน้า", "next": "หน้าถัดไป" },
+            },
+        });
+
+        $('#DT_load_queue_stop').DataTable({
+            "destroy": true,
+            "ordering": false,
+            "language": {
+                "lengthMenu"
+                    : "แสดงข้อมูล _MENU_ แถว ต่อหน้า"
+                , "zeroRecords": "ไม่พบข้อมูล!", "info"
+                    : "กำลังแสดงหน้าที่ _PAGE_ จากทั้งหมด _PAGES_ หน้า", "infoEmpty"
+                    : "ไม่พบข้อมูล!", "infoFiltered": "(ค้นหาจากข้อมูลทั้งหมด _MAX_ แถว)"
+                , "search": "ค้นหา", "emptyTable": "ไม่มีข้อมูล", "paginate":
+                    { "previous": "หน้าก่อนหน้า", "next": "หน้าถัดไป" },
+            },
+        });
+
+        @* $("#queue_a").show();
+                $("#queue_b").hide();
+                $("#queue_c").hide();
+
+                $("#a").click(function () {
+                $("#queue_a").show();
+                $("#queue_b").hide();
+                $("#queue_c").hide();
+                });
+
+                $("#b").click(function () {
+                $("#queue_a").hide();
+                $("#queue_b").show();
+                $("#queue_c").hide();
+                });
+                $("#c").click(function () {
+                $("#queue_a").hide();
+                $("#queue_b").hide();
+                $("#queue_c").show();
+                }); *@
+
+                                            });
+
+    function ChangeTblStatus(url) {
+        $.ajax({
+            type: "POST",
+            url: url,
+        }).then(() => {
+            window.location.reload();
+        })
+
+    }
+
+    function CallA(formid) {
+        toastr.success("ทำการเรียกคิวสำเร็จ"); 
+        setTimeout(50000)
+        document.getElementById('typeA'+formid).submit();
+    }
+
+    function CallB(formid) {
+        toastr.success("ทำการเรียกคิวสำเร็จ"); 
+        setTimeout(50000)
+        document.getElementById('typeB'+formid).submit();
+    }
+
+    function CallC(formid) {
+        toastr.success("ทำการเรียกคิวสำเร็จ"); 
+        setTimeout(50000)
+        document.getElementById('typeC'+formid).submit();
+    }
+
+
+    function status(url) {
+        swal({
+            title: "คุณแน่ใจว่าจะเปลี่ยนสถานะการรอ ?",
+            icon: "warning", buttons: true, dangerMode: false, buttons:
+                ["ยกเลิก", "ตกลง"],
+        }).then((willSuccess) => {
+            if (willSuccess) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            setTimeout(() => { console.log("Delay!"); }, 10000);
+                            location.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                        console.log(data);
+                    },
+                });
+            }
+        });
+    }
+
+    let type_A_value = $('#Type_A_Today').val();
+    let type_B_value = $('#Type_B_Today').val();
+    let type_C_value = $('#Type_C_Today').val();
+    const piechart = document.getElementById('myChart_1').getContext('2d');
+    const myChart_1 = new Chart(piechart, {
+        type: 'doughnut',
+        data: {
+            labels: ['1-2 คน', '3-4 คน', 'มากกว่า 4 คน'],
+            datasets: [{
+                label: '# of Votes',
+                data: [type_A_value, type_B_value, type_C_value],
+                backgroundColor: [
+                    '#f56954',
+                    '#00a65a',
+                    '#f39c12'
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+    });
+
+
+    let Value_8am = $('#Value_8am').val();
+    let Value_9am = $('#Value_9am').val();
+    let Value_10am = $('#Value_10am').val();
+    let Value_11am = $('#Value_11am').val();
+    let Value_12am = $('#Value_12am').val();
+    let Value_13am = $('#Value_13am').val();
+    let Value_14am = $('#Value_14am').val();
+    let Value_15am = $('#Value_15am').val();
+    let Value_16am = $('#Value_16am').val();
+    let Value_17am = $('#Value_17am').val();
+    let Value_18am = $('#Value_18am').val();
+    let Value_19am = $('#Value_19am').val();
+    let Value_20am = $('#Value_20am').val();
+    let Value_21am = $('#Value_21am').val();
+
+    const barchart = document.getElementById('myChart_2').getContext('2d');
+    const myChart = new Chart(barchart, {
+        type: 'bar',
+        data: {
+            labels: ['08:00', '09:00',
+                '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'],
+            datasets: [{
+                label: 'จำนวนผู้เข้าใช้บริการ',
+                data: [Value_8am, Value_9am, Value_10am, Value_11am,
+                    Value_12am, Value_13am, Value_14am, Value_15am, Value_16am,
+                    Value_17am, Value_18am, Value_19am, Value_20am, Value_21am,
+
+                ],
+                backgroundColor: [
+                    '#37A1FF', '#37A1FF', '#37A1FF', '#37A1FF',
+                    '#2F85D1', '#2F85D1', '#2F85D1', '#2F85D1', '#2F85D1',
+                    '#2568A4', '#2568A4', '#2568A4', '#2568A4', '#2568A4',
+                ],
+                maxBarThickness: 70,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                }
+            },
+        }
+    });
+</script>
+                                            }
