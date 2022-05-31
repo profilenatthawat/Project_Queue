@@ -295,7 +295,7 @@ namespace project_2564
         [HttpPost]
         public IActionResult CallInLineNotify(String Queue_no, String tbl)
         {
-            string token = "D6kQOieF6gV8LfwN19UM6SBaTU8tu7VR3ZNBoEHanUD"; // โทเคนสำหรับส่งข้อความไปยังกลุ่มไลน์
+            string token = "1GiSdXpDQnwWefjgwtdZRwbmpWEO4y4JiRzkGpYPhVl"; // โทเคนสำหรับส่งข้อความไปยังกลุ่มไลน์
             string message = "ขอเชิญคิว " + Queue_no + " เข้ารับบริการด้วยค่ะ."; // ข้อความที่ต้องการส่ง
             tbl = "0" ;
             LineNotify(token, message); // นำข้อมูลส่งเข้าไปยังเมธอดเพื่อส่งข้อความไปยังกลุ่มไลน์
